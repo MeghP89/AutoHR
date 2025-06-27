@@ -4,16 +4,10 @@ const EmailService = require('../services/emailService');
 const UserService = require('../services/userService');
 const TicketService = require('../services/ticketService');
 const callOllamaWithRetries = require('./ollamaController');
+const getOAuth2Client = require('../utils/googleClient');
 require('dotenv').config({ path: path.resolve(__dirname, '../config/.env') });
 
 let currentPollingInterval = null;
-
-function authorize() {
-  const { CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, REFRESH_TOKEN } = process.env;
-  const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
-  oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
-  return oauth2Client;
-}
 
 function decodeBase64Email(data) {
   const normalized = data.replace(/-/g, '+').replace(/_/g, '/'); // Gmail uses URL-safe base64
@@ -21,8 +15,8 @@ function decodeBase64Email(data) {
   return buff.toString('utf-8');
 }
 
-async function fetchPrimaryEmailsSince(timestamp, maxResults = 1000) {
-  const auth = authorize();
+async function fetchPrimaryEmailsSince(user, timestamp, maxResults = 1000) {
+  const auth = await getOAuth2Client(user);
   const gmail = google.gmail({ version: 'v1', auth });
 
   const query = `category:primary after:${timestamp}`;
@@ -92,7 +86,7 @@ async function startPolling(user, intervalMinutes = 1) {
   }
 
   stopPolling();
-
+  
   const intervalMs = intervalMinutes * 60 * 1000;
   let lastCheckTimestamp = Math.floor(Date.now() / 1000);
 
@@ -102,7 +96,7 @@ async function startPolling(user, intervalMinutes = 1) {
     console.log(`\n🔍 Polling for emails since ${new Date(lastCheckTimestamp * 1000).toISOString()}`);
 
     try {
-      const newEmails = await fetchPrimaryEmailsSince(lastCheckTimestamp);
+      const newEmails = await fetchPrimaryEmailsSince(user, lastCheckTimestamp);
       await EmailService.saveNewEmails(user, newEmails);
 
       if (newEmails.length > 0) {
@@ -149,10 +143,7 @@ async function startPolling(user, intervalMinutes = 1) {
 }
 
 // Legacy fallback function
-async function pollForNewEmails(intervalMs = 60000) {
-  const email = 'test@example.com';
-  const name = 'Test User';
-  const user = await UserService.getUserByEmail(email) || await UserService.createUser(email, name);
+async function pollForNewEmails(intervalMs = 60000, user) {
   const intervalMinutes = intervalMs / 60000;
   return startPolling(user, intervalMinutes);
 }

@@ -1,9 +1,9 @@
 const User = require('../database/models/User');
 
 class UserService {
-  async createUser(email, name) {
+  async createUser({email, name, accessToken, refreshToken, googleId}) {
     try {
-      const user = await User.create({ email, name });
+      const user = await User.create({ email, name, accessToken, refreshToken, googleId });
       return user;
     } catch (error) {
       console.error('Error creating user:', error);
