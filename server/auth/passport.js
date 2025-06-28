@@ -16,7 +16,6 @@ passport.use(new GoogleStrategy({
     // These two settings are crucial for getting a refresh token.
     accessType: 'offline',
     prompt: 'consent',
-    approvalPrompt: 'force'
 }, async function (accessToken, refreshToken, profile, cb) {
     try {
         const provider = 'google';

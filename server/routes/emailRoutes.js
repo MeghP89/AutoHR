@@ -1,7 +1,6 @@
 const express = require('express');
-const router = express.Router();
 const { pollForNewEmails } = require('../controllers/emailController');
-
+const router = express.Router();
 
 router.get('/emails', async (req, res) => {
     try {

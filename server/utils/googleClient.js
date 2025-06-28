@@ -9,10 +9,24 @@ async function getOAuth2Client(user) {
     process.env.REDIRECT_URI
   );
 
-  // Set only the access token
+  // Set both tokens if available
   oauth2Client.setCredentials({
-    access_token: user.accessToken
+    access_token: user.accessToken,
+    refresh_token: user.refreshToken // Only useful if you have it
   });
+
+  // Attempt to refresh access token if refresh token exists
+  if (user.refreshToken) {
+    try {
+      const { credentials } = await oauth2Client.refreshAccessToken(); // deprecated but still works
+      oauth2Client.setCredentials({
+        access_token: credentials.access_token,
+        refresh_token: credentials.refresh_token || user.refreshToken
+      });
+    } catch (error) {
+      console.error('🔴 Error refreshing access token:', error.message);
+    }
+  }
 
   return oauth2Client;
 }
