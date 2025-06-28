@@ -5,11 +5,14 @@ import TicketCard from '../components/TicketCard';
 import type {Ticket} from '../types/Ticket'
 import TicketStats from '../components/TicketStats';
 import FilterTabs from '../components/FilterTabs';
+import LastUpdated from '../components/LastUpdated';
+import TicketDetailModal from '../components/TicketDetailModal'; // Import the new modal
 
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filter, setFilter] = useState('all');
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
+  const [lastUpdateTime, setLastUpdateTime] = useState<Date>(new Date());
 
   const fetchTickets = async () => {
     try {
@@ -17,6 +20,7 @@ export default function Dashboard() {
         const res = await axios.get('http://localhost:3000/api/tickets/getTicketsByUserId', { withCredentials: true });
         console.log('✅ Tickets received:', res.data);
         setTickets(res.data);
+        setLastUpdateTime(new Date());
     } catch (error) {
         console.error('❌ Error fetching tickets:', error);
     }
@@ -67,21 +71,22 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0">
-        {[...Array(15)].map((_, i) => (
-          <div
+    {/* Floating particles */}
+    {[...Array(30)].map((_, i) => (
+        <div
             key={i}
             className="absolute w-2 h-2 bg-white rounded-full opacity-10"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animation: 'float 8s ease-in-out infinite',
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationName: 'float',
+                animationDuration: '8s',
+                animationTimingFunction: 'ease-in-out',
+                animationIterationCount: 'infinite',
+                animationDelay: `${Math.random() * 5}s`,
             }}
-          />
-        ))}
-      </div>
+        />
+    ))}
 
       <div className="relative z-10 min-h-screen p-6">
         <div className="max-w-7xl mx-auto mb-8">
@@ -90,10 +95,7 @@ export default function Dashboard() {
               <h1 className="text-4xl font-bold text-white mb-2">Support Dashboard</h1>
               <p className="text-white/70 text-lg">Manage and track support tickets</p>
             </div>
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-4 border border-white/20">
-              <div className="text-white/70 text-sm">Last updated</div>
-              <div className="text-white font-semibold">Just now</div>
-            </div>
+            <LastUpdated updateTimestamp={lastUpdateTime}/>
           </div>
 
           <TicketStats stats={stats} />

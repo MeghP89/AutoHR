@@ -25,7 +25,7 @@ const ticketSchema = new mongoose.Schema({
     },
     suggestedSolution: {
         type: String,
-        maxlength: 500
+        required: true
     },
     status: {
         type: String,

@@ -5,7 +5,7 @@ const ticketSchema = z.object({
     summary: z.string().min(100, "Summary must be at least 100 characters").max(300, "Summary must be less than 500 characters"),
     intent: z.enum(['bug', 'req', 'qna', 'cmp', 'oth']),
     priority: z.enum(['low', 'medium', 'high', 'urgent'], { required_error: "Priority is required" }),
-    suggestedSolution: z.string().max(100, "Suggested solution must be less than 500 characters"),
+    suggestedSolution: z.string().max(500, "Suggested solution must be less than 500 characters"),
     sender: z.string().email("Invalid email format").max(100, "Email must be less than 100 characters"),
 });
 

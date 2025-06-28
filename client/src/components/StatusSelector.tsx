@@ -49,8 +49,8 @@ export default function StatusSelector({ ticketId, initialStatus, onStatusUpdate
   };
 
   return (
-    <div className="relative flex items-center">
-      <div className={`w-2 h-2 rounded-full mr-2 ${getStatusColor(currentStatus)} transition-colors`} />
+    <div className="relative flex items-center mr-4">
+      <div className={`w-3 h-3 rounded-full mr-4 mt-1.49 ${getStatusColor(currentStatus)} transition-colors`} />
       
       {/* The styled dropdown select element */}
       <select
@@ -59,7 +59,7 @@ export default function StatusSelector({ ticketId, initialStatus, onStatusUpdate
         disabled={isLoading} // Disable the dropdown while updating
         className={`
           -ml-2 -my-1 pl-5 pr-7 py-1
-          text-xs capitalize rounded-lg appearance-none bg-transparent 
+          text-s capitalize rounded-lg appearance-none bg-transparent 
           text-white/70 hover:bg-white/10 focus:outline-none focus:ring-1 focus:ring-purple-400
           transition-all duration-200
           ${isLoading ? 'cursor-wait' : 'cursor-pointer'}
@@ -75,7 +75,7 @@ export default function StatusSelector({ ticketId, initialStatus, onStatusUpdate
       </select>
       
       {/* A custom dropdown arrow */}
-      <div className="absolute right-1 top-1/2 -translate-y-1/2 text-white/50 pointer-events-none">
+      <div className="absolute right-1 top-5/9 -translate-y-1/2 text-white/50 pointer-events-none">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" viewBox="0 0 16 16">
           <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
         </svg>

@@ -7,4 +7,5 @@ export type Ticket = {
   status: 'open' | 'in-progress' | 'closed';
   sender: string;
   createdAt: Date;
+  suggestedSolution: string;
 };
