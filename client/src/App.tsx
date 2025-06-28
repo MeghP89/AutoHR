@@ -10,19 +10,25 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={loading ? <div className="text-white p-4">Loading...</div> : isAuthenticated ? <Navigate to="/dashboard" /> : <Login />} />
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}>
-              <Dashboard />
-            </ProtectedRoute>
+        <ProtectedRoute isAuthenticated={isAuthenticated} loading={loading}>
+          <Dashboard />
+        </ProtectedRoute>
           }
         />
         <Route
           path="/"
           element={
-            isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+        loading ? (
+          <div className="text-white p-4">Loading...</div>
+        ) : isAuthenticated ? (
+          <Navigate to="/dashboard" />
+        ) : (
+          <Navigate to="/login" />
+        )
           }
         />
       </Routes>

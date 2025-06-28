@@ -26,9 +26,30 @@ export default function Dashboard() {
     }
   };
 
-
+  const startEmailPolling = async () => {
+    try {
+      const res = await axios.get('http://localhost:3000/api/emails', { withCredentials: true });
+      console.log('📬 Email polling started:', res.data);
+    } catch (error) {
+      console.error('❌ Error starting email polling:', error);
+    }
+  };
   useEffect(() => {
+    //Start email polling only once
+    startEmailPolling();
+
+    //Fetch immediately
     fetchTickets();
+
+    //Set interval to refetch every 20 seconds
+    const interval = setInterval(() => {
+        fetchTickets();
+        setLastUpdateTime(new Date())
+    }, 60000);
+
+    // Clean up interval on unmount
+    return () => clearInterval(interval);
+
   }, []);
   // This function will be called by the StatusSelector after a successful API update.
   const handleStatusUpdated = (ticketId: string, newStatus: string) => {
