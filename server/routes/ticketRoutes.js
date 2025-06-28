@@ -3,6 +3,7 @@
 const express = require('express');
 const TicketService = require('../services/ticketService');
 const ensureAuthenticated = require('../middleware/authentication'); // Assuming you created this
+const Ticket = require('../database/models/Ticket');
 const router = express.Router();
 
 /**
@@ -24,5 +25,16 @@ router.get('/getTicketsByUserId', ensureAuthenticated, async (req, res) => {
   }
 });
 
+router.put('/updateStatus', ensureAuthenticated, async (req, res) => {
+  const { ticketId, status } = req.body;
+
+  try {
+    const updatedTicket = await TicketService.updateTicket(ticketId, { status });
+    res.json(updatedTicket);
+  } catch (error) {
+    console.error('Error updating ticket status:', error);
+    res.status(500).json({ error: 'Failed to update ticket' });
+  }
+});
 // Don't forget to export the router!
 module.exports = router;

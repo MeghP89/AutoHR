@@ -9,11 +9,12 @@ import FilterTabs from '../components/FilterTabs';
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [filter, setFilter] = useState('all');
+  const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
 
   const fetchTickets = async () => {
     try {
         console.log('📥 Fetching tickets...');
-        const res = await axios.get('http://localhost:3000/api/getTicketsByUserId', { withCredentials: true });
+        const res = await axios.get('http://localhost:3000/api/tickets/getTicketsByUserId', { withCredentials: true });
         console.log('✅ Tickets received:', res.data);
         setTickets(res.data);
     } catch (error) {
@@ -25,7 +26,16 @@ export default function Dashboard() {
   useEffect(() => {
     fetchTickets();
   }, []);
-
+  // This function will be called by the StatusSelector after a successful API update.
+  const handleStatusUpdated = (ticketId: string, newStatus: string) => {
+    setTickets(currentTickets => 
+      currentTickets.map(ticket => 
+        ticket._id === ticketId 
+          ? { ...ticket, status: newStatus as 'open' | 'in-progress' | 'closed' } 
+          : ticket
+      )
+    );
+  };
 
   const filteredTickets = filter === 'all' ? tickets : tickets.filter(t => t.status === filter);
 
@@ -91,9 +101,9 @@ export default function Dashboard() {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-4">
             {filteredTickets.map(ticket => (
-              <TicketCard key={ticket._id} ticket={ticket} />
+              <TicketCard key={ticket._id} ticket={ticket} onExpand={() => setSelectedTicket(ticket)} onStatusUpdated={handleStatusUpdated} />
             ))}
           </div>
 

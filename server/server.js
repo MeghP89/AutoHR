@@ -27,7 +27,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/api', emailRoutes);
-app.use('/api', ticketRoutes)
+app.use('/api/tickets', ticketRoutes)
 app.use(authRoutes); // Use the auth routes for Google login
 
 const PORT = process.env.PORT || 3000;

@@ -4,7 +4,7 @@ export type Ticket = {
   summary: string;
   intent: string;
   priority: string;
-  status: string;
+  status: 'open' | 'in-progress' | 'closed';
   sender: string;
   createdAt: Date;
 };
