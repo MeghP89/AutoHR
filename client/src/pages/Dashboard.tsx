@@ -45,7 +45,7 @@ export default function Dashboard() {
     const interval = setInterval(() => {
         fetchTickets();
         setLastUpdateTime(new Date())
-    }, 60000);
+    }, 5000);
 
     // Clean up interval on unmount
     return () => clearInterval(interval);
