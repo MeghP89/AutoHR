@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
+const path = require('path')
 
 const connectDB = async () => {
   try {
-    await mongoose.connect('mongodb+srv://easiesttofollow:0pY742fZn0Tl9KPE@cluster0.wo3ilvn.mongodb.net/', {
+    await mongoose.connect(process.env.MONGODBURL, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
       dbName: 'IBM-Hackathon',
