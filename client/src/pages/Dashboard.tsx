@@ -124,9 +124,9 @@ export default function Dashboard() {
         </div>
 
         <div className="max-w-7xl mx-auto">
-          <div className="space-y-4">
+          <div className="space-y-10">
             {filteredTickets.map(ticket => (
-              <TicketCard key={ticket._id} ticket={ticket} onExpand={() => setSelectedTicket(ticket)} onStatusUpdated={handleStatusUpdated} />
+              <TicketCard key={ticket._id} ticket={ticket} onStatusUpdated={handleStatusUpdated} />
             ))}
           </div>
 

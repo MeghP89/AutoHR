@@ -8,4 +8,5 @@ export type Ticket = {
   sender: string;
   createdAt: Date;
   suggestedSolution: string;
+  relevantUserinfo: string;
 };

@@ -41,6 +41,11 @@ class TicketService {
     async getTicketsByEmailId(emailId) {
         return await Ticket.find({ emailId }).sort({ createdAt: -1 });
     }
+
+    async getTicketByEmailId(emailId) {
+        return await Ticket.findOne({ emailId });
+    }
+    
     async getTicketsByUserId(userId) {
         console.log(`Finding tickets for ${userId}`);
         return await Ticket.find({ userId }).sort({ createdAt: -1 });

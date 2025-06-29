@@ -36,5 +36,6 @@ router.put('/updateStatus', ensureAuthenticated, async (req, res) => {
     res.status(500).json({ error: 'Failed to update ticket' });
   }
 });
+
 // Don't forget to export the router!
 module.exports = router;

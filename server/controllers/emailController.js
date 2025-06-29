@@ -3,8 +3,9 @@ const path = require('path');
 const EmailService = require('../services/emailService');
 const UserService = require('../services/userService');
 const TicketService = require('../services/ticketService');
-const callOllamaWithRetries = require('./ollamaController');
+const { callOllamaWithRetries } = require('./ollamaController');
 const getOAuth2Client = require('../utils/googleClient');
+const SentEmail = require('../database/models/SentEmail');
 require('dotenv').config({ path: path.resolve(__dirname, '../config/.env') });
 
 let currentPollingInterval = null;

@@ -12,7 +12,7 @@ passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
     callbackURL: process.env.REDIRECT_URI,
-    scope: ['profile', 'email', 'https://www.googleapis.com/auth/gmail.readonly'],
+    scope: ['profile', 'email', 'https://www.googleapis.com/auth/gmail.readonly', 'https://www.googleapis.com/auth/gmail.send'],
     // These two settings are crucial for getting a refresh token.
     accessType: 'offline',
     prompt: 'consent',

@@ -1,5 +1,5 @@
 const Email = require('../database/models/Email');
-const callOllamaWithRetries = require('../controllers/ollamaController');
+const {callOllamaWithRetries} = require('../controllers/ollamaController');
 const { gmail } = require('googleapis/build/src/apis/gmail');
 
 class EmailService {
@@ -17,6 +17,8 @@ class EmailService {
           gmailEmail.messageId = gmailEmail.messageId || gmailEmail.id; // Ensure messageId is set
           savedEmails.push(gmailEmail); // Only push if inserted
           console.log(`✅ Email saved: ${gmailEmail.subject}`);
+        } else if (!gmailEmail.ticketCreated) {
+          savedEmails.push(gmailEmail);
         } else {
           console.log(`ℹ️ Email already exists: ${gmailEmail.subject}`);
         }

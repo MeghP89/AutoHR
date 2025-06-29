@@ -50,6 +50,10 @@ const ticketSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
+    },
+    relevantUserinfo: {
+        type: String,
+        required: true
     }
 }, {
     collection: 'Tickets',

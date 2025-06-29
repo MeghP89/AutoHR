@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { getPriorityBorderColor, getPriorityColor, getStatusColor, getIntentText } from '../utils/ticketUtils';
 import StatusSelector from './StatusSelector';
-import type { Ticket } from '../types/Ticket'
+import type { Ticket } from '../types/Ticket';
+import axios from 'axios';
 
 type Props = {
   ticket: Ticket;
@@ -13,6 +14,16 @@ type Props = {
 export default function TicketCard({ ticket, onStatusUpdated }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const [isExpanded, setExpanded] = useState(false);
+  const [emailSent, setEmailSent] = useState(null);
+
+  const sendEmail = async (ticket: Ticket) => {
+    try {
+      const res = await axios.post('http://localhost:3000/api/sendEmail', { ticket });
+      setEmailSent(res.data.email);
+      } catch (error) {
+      console.error('❌ Failed to send email:', error);
+    }
+  };
 
   const handleExpand = () => {
     setExpanded(prev => !prev);
@@ -74,15 +85,25 @@ export default function TicketCard({ ticket, onStatusUpdated }: Props) {
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <div className="border-t border-white/20 pt-4" onClick={(e) => e.stopPropagation()}>
+          <h4 className="font-semibold text-white mb-2">Relevant User Info</h4>
+          <p className="text-white/80 whitespace-pre-wrap mb-3">
+            {ticket.relevantUserinfo}
+          </p>
           <h4 className="font-semibold text-white mb-2">Suggested Action</h4>
           <p className="text-white/80 whitespace-pre-wrap mb-3">
             {ticket.suggestedSolution}
           </p>
           {ticket.status === 'in-progress' ? <div className="mt-4 flex gap-4">
-            <button className="bg-purple-500/80 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+            <button onClick={()=>sendEmail(ticket)} className="bg-purple-500/80 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm font-semibold">
               Fulfill With Agent
             </button>
           </div> : <p className="text-red-400/70 text-sm mb-2 line-clamp-2">Mark as In Progress for AI Agent Fulfillment Option</p>}
+          {(ticket.status === 'in-progress' || ticket.status === 'closed') && emailSent ?
+          <div> 
+            <h4 className="font-semibold text-white mb-2">Email Has Been Sent</h4>
+              <p className="text-red-400/70 text-sm mb-2 line-clamp-2"></p> 
+            </div>
+          : <></>}
         </div>
       </motion.div>
 
